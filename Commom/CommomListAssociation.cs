@@ -5,14 +5,11 @@ namespace GeekHub.Domains
 {
     public abstract class CommomListAssociation
     {
-        [Required]
-        public int MovieId { get; set; }
-
         [ForeignKey("MovieId")]
         public Movie Movie { get; set; }
 
         [Required]
-        public string ListId { get; set; }
+        public string Id { get; set; }
 
         public CommomListAssociation() { }
     }

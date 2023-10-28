@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GeekHub.Domains
 {
@@ -6,6 +7,7 @@ namespace GeekHub.Domains
     {
         [Key]
         [Required]
+        [ForeignKey("movieId")]
         public int MovieId { get; set; }
 
         public string Title { get; set; }

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GeekHub.Domains
 {
@@ -8,10 +7,9 @@ namespace GeekHub.Domains
         [Key]
         public string AssociationId { get; set; }
 
-        [ForeignKey("ListId")]
-        public string ListId { get; set; }
-
         public FavoritesListMovies FavoritesList { get; set; }
+
+        public Movie Movie { get; set; }
 
         public FavoritesListAssociation() { }
     }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GeekHub.Domains
 {
@@ -10,7 +11,7 @@ namespace GeekHub.Domains
         public ICollection<Movie> Movies { get; set; }
 
         [Required]
-        public string User { get; set; }
+        public virtual User User { get; set; }
 
         public virtual string ListName { get; set; }
 

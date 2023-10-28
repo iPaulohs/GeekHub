@@ -30,9 +30,13 @@ namespace GeekHub.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    CPF = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -48,19 +52,6 @@ namespace GeekHub.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FavoritesLists",
-                columns: table => new
-                {
-                    ListId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ListName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    User = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FavoritesLists", x => x.ListId);
                 });
 
             migrationBuilder.CreateTable(
@@ -170,44 +161,20 @@ namespace GeekHub.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FavoritesListAssociations",
+                name: "FavoritesLists",
                 columns: table => new
                 {
-                    AssociationId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ListId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FavoritesListListId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ListId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ListName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FavoritesListAssociations", x => x.AssociationId);
+                    table.PrimaryKey("PK_FavoritesLists", x => x.ListId);
                     table.ForeignKey(
-                        name: "FK_FavoritesListAssociations_FavoritesLists_FavoritesListListId",
-                        column: x => x.FavoritesListListId,
-                        principalTable: "FavoritesLists",
-                        principalColumn: "ListId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(25)", maxLength: 25, nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FavoriteMoviesListId = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
-                    table.ForeignKey(
-                        name: "FK_Users_FavoritesLists_FavoriteMoviesListId",
-                        column: x => x.FavoriteMoviesListId,
-                        principalTable: "FavoritesLists",
-                        principalColumn: "ListId");
+                        name: "FK_FavoritesLists_AspNetUsers_ListId",
+                        column: x => x.ListId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -215,36 +182,16 @@ namespace GeekHub.Migrations
                 columns: table => new
                 {
                     ListId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ListName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    User = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    ListName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GeneralLists", x => x.ListId);
                     table.ForeignKey(
-                        name: "FK_GeneralLists_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GeneralListsAssociations",
-                columns: table => new
-                {
-                    AssociationId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ListId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GeneralListListId = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GeneralListsAssociations", x => x.AssociationId);
-                    table.ForeignKey(
-                        name: "FK_GeneralListsAssociations_GeneralLists_GeneralListListId",
-                        column: x => x.GeneralListListId,
-                        principalTable: "GeneralLists",
-                        principalColumn: "ListId");
+                        name: "FK_GeneralLists_AspNetUsers_ListId",
+                        column: x => x.ListId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -270,6 +217,55 @@ namespace GeekHub.Migrations
                         column: x => x.GeneralListMoviesListId,
                         principalTable: "GeneralLists",
                         principalColumn: "ListId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FavoritesListAssociations",
+                columns: table => new
+                {
+                    AssociationId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FavoritesListListId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MovieId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FavoritesListAssociations", x => x.AssociationId);
+                    table.ForeignKey(
+                        name: "FK_FavoritesListAssociations_FavoritesLists_FavoritesListListId",
+                        column: x => x.FavoritesListListId,
+                        principalTable: "FavoritesLists",
+                        principalColumn: "ListId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FavoritesListAssociations_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "MovieId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GeneralListsAssociations",
+                columns: table => new
+                {
+                    AssociationId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    GeneralListListId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    MovieId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GeneralListsAssociations", x => x.AssociationId);
+                    table.ForeignKey(
+                        name: "FK_GeneralListsAssociations_GeneralLists_GeneralListListId",
+                        column: x => x.GeneralListListId,
+                        principalTable: "GeneralLists",
+                        principalColumn: "ListId");
+                    table.ForeignKey(
+                        name: "FK_GeneralListsAssociations_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "MovieId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -317,14 +313,19 @@ namespace GeekHub.Migrations
                 column: "FavoritesListListId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GeneralLists_UserId",
-                table: "GeneralLists",
-                column: "UserId");
+                name: "IX_FavoritesListAssociations_MovieId",
+                table: "FavoritesListAssociations",
+                column: "MovieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GeneralListsAssociations_GeneralListListId",
                 table: "GeneralListsAssociations",
                 column: "GeneralListListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GeneralListsAssociations_MovieId",
+                table: "GeneralListsAssociations",
+                column: "MovieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Movies_FavoritesListMoviesListId",
@@ -335,11 +336,6 @@ namespace GeekHub.Migrations
                 name: "IX_Movies_GeneralListMoviesListId",
                 table: "Movies",
                 column: "GeneralListMoviesListId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_FavoriteMoviesListId",
-                table: "Users",
-                column: "FavoriteMoviesListId");
         }
 
         /// <inheritdoc />
@@ -367,22 +363,19 @@ namespace GeekHub.Migrations
                 name: "GeneralListsAssociations");
 
             migrationBuilder.DropTable(
-                name: "Movies");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Movies");
+
+            migrationBuilder.DropTable(
+                name: "FavoritesLists");
 
             migrationBuilder.DropTable(
                 name: "GeneralLists");
 
             migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "FavoritesLists");
+                name: "AspNetUsers");
         }
     }
 }

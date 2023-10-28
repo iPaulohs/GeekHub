@@ -19,16 +19,6 @@ namespace GeekHub.Controllers
         [HttpGet]
         public ActionResult IsValidEmail(string email)
         {
-            if(email == null)
-            {
-                return BadRequest("Invalid Email!");
-            }
-
-            if (_userRepository.IsValidEmail(email) == false)
-            {
-                return BadRequest("Invalid Email!");
-            }
-
             return Ok("Valid Email!");
         }
     }
