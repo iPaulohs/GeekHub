@@ -3,3 +3,13 @@
 ################################################################################
 
 /appsettings.Development.json
+/libman.json
+
+/obj/Debug/net7.0/ref/GeekHub.dll
+/bin/Debug/net7.0/appsettings.Development.json
+/bin/Debug/net7.0/appsettings.json
+/bin/Debug/net7.0/GeekHub.dll
+/bin/Debug/net7.0/GeekHub.pdb
+/obj/Debug/net7.0/GeekHub.csproj.CoreCompileInputs.cache
+/obj/Debug/net7.0/GeekHub.dll
+/appsettings.json
