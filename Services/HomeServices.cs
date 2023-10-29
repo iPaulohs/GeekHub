@@ -6,14 +6,14 @@ namespace GeekHub.Services
     {
         private readonly HttpClient _httpClient;
         public HomeServices(HttpClient httpClient) => _httpClient = httpClient;
+        
 
-        public async Task<ActionResult<string>> HomeGet(string url)
+        public async Task<ActionResult<string>> HomeGet(string url, string apiKey)
         {
             try
             {
-                _httpClient.DefaultRequestHeaders.Add("Authorization", "Apikey");
+                _httpClient.DefaultRequestHeaders.Add("Authorization", apiKey);
                 _httpClient.DefaultRequestHeaders.Add("accept", "application/json");
-                Console.WriteLine("Api: ApiKey");
 
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 

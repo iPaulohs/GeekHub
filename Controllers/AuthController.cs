@@ -2,7 +2,10 @@
 using GeekHub.DTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace GeekHub.Controllers
 {
@@ -12,11 +15,14 @@ namespace GeekHub.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
         {
            _signInManager = signInManager;
             _userManager = userManager;
+            _configuration = configuration;
+
         }
 
         [HttpGet]
@@ -47,7 +53,34 @@ namespace GeekHub.Controllers
             }
 
             await _userManager.SetLockoutEnabledAsync(user, false);
-            return Ok("Registered user!");
+            return Ok(GenerateToken(user));
+        }
+
+        private UserToken GenerateToken(User user)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.Email),
+                new Claim("<<_GeekHub_>>", "<<_GHT_>>"),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expirationToken = DateTime.UtcNow.AddHours(double.Parse(_configuration["TokenConfiguration:ExpireHour"]));
+
+            JwtSecurityToken token = new(issuer: _configuration["TokenConfiguration:Issuer"], audience: _configuration["TokenConfiguration:Audience"], claims: claims, expires: expirationToken, signingCredentials: credentials);
+
+            Console.WriteLine(token);
+
+            return new UserToken()
+            {
+                Authenticated = true,
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = expirationToken,
+                Message = "Generate token sucessfull."
+            };
+        
         }
 
         [HttpPost("login")]
@@ -68,7 +101,7 @@ namespace GeekHub.Controllers
 
             if (result.Succeeded)
             {
-                return Ok("Login sucessfull.");
+                return Ok(GenerateToken(user));
             }
             else
             {

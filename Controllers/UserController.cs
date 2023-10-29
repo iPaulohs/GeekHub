@@ -14,12 +14,5 @@ namespace GeekHub.Controllers
         {
             _userRepository = userRepository;
         }
-
-        [Authorize]
-        [HttpGet]
-        public ActionResult IsValidEmail(string email)
-        {
-            return Ok("Valid Email!");
-        }
     }
 }
