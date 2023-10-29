@@ -2,18 +2,24 @@
 # Este arquivo .gitignore foi criado automaticamente pelo Microsoft(R) Visual Studio.
 ################################################################################
 
+# Ignorar arquivos de configuração específicos para o ambiente de desenvolvimento
 /appsettings.Development.json
 /libman.json
 
-/obj/Debug/net7.0/ref/GeekHub.dll
+# Ignorar arquivos e diretórios gerados pela compilação
+/bin/
+/obj/
+
+# Ignorar arquivos específicos dentro de bin/Debug/net7.0/
 /bin/Debug/net7.0/appsettings.Development.json
 /bin/Debug/net7.0/appsettings.json
 /bin/Debug/net7.0/GeekHub.dll
 /bin/Debug/net7.0/GeekHub.pdb
 /obj/Debug/net7.0/GeekHub.csproj.CoreCompileInputs.cache
 /obj/Debug/net7.0/GeekHub.dll
+
+# Ignorar arquivos de projeto, solução e usuário
 /appsettings.json
 /GeekHub.sln
 /GeekHub.csproj.user
 /GeekHub.csproj
-/bin/*
