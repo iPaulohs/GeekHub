@@ -6,12 +6,14 @@ namespace GeekHub.Domains
     public abstract class CommomList
     {
         [Key]
+        [StringLength(120)]
         public string ListId { get; set; }
 
-        public ICollection<Movie> Movies { get; set; }
-
         [Required]
-        public virtual User User { get; set; }
+        public User User { get; set; }
+
+
+        public ICollection<Movie> Movies { get; set; } = new List<Movie>();
 
         public virtual string ListName { get; set; }
 

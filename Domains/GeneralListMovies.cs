@@ -6,7 +6,7 @@ namespace GeekHub.Domains
     {
         [Required]
         [MaxLength(50)]
-        public override string ListName { get; set; } 
+        public override string ListName { get; set; }
 
         public GeneralListMovies() { }
     }

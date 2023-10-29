@@ -1,5 +1,4 @@
 ﻿using GeekHub.Repository.User;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GeekHub.Controllers
@@ -13,6 +12,27 @@ namespace GeekHub.Controllers
         public UserController(IUserRepository userRepository)
         {
             _userRepository = userRepository;
+        }
+
+        [HttpGet]
+        public IActionResult Get(string userId)
+        {
+            var result = _userRepository.GetAllMovies(userId);
+
+            if(result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public IActionResult AddMovie(int movieId, string movieTitle, string userId)
+        {
+            _userRepository.AddMovie(movieId, movieTitle, userId);
+
+            return Ok();
         }
     }
 }

@@ -78,7 +78,9 @@ namespace GeekHub.Controllers
                 Authenticated = true,
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiration = expirationToken,
-                Message = "Generate token sucessfull."
+                Message = "Generate token sucessfull.",
+                UserId = user.Id,
+                UserName = user.UserName
             };
         
         }

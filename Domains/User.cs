@@ -8,36 +8,35 @@ namespace GeekHub.Domains
     {
         [Key]
         [Required]
-        [ForeignKey("UserId")]
         public override string? Id { get; set; }
 
         [Required]
-        [MaxLength(80)]
+        [StringLength(80)]
         public string? Name { get; set; }
 
         [Required]
-        [MaxLength(40)]
+        [StringLength(80)]
         [RegularExpression(@"^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$", ErrorMessage = "Email format is invalid!")]
         public override string? Email { get; set; }
 
         [Required]
-        [MaxLength(25)]
+        [StringLength(45)]
         public string? Password { get; set; }
 
-        [MaxLength(25)]
+        [StringLength(14)]
         [RegularExpression(@"^\d{3}\.\d{3}\.\d{3}-\d{2}$")]
         public string CPF {  get; set; }
 
         [Required]
-        [MaxLength(25)]
+        [StringLength(25)]
         public override string? UserName { get; set; }
 
         [Required]
         public DateTime BirthDate { get; set; }
 
-        public FavoritesListMovies? FavoriteMovies { get; set; }
+        public ICollection<Movie> Favorites { get; set; } = new List<Movie>();
 
-        public ICollection<GeneralListMovies>? GeneralListMovies { get; set; }
+        public virtual ICollection<GeneralListMovies> GeneralLists { get; set; } = new List<GeneralListMovies>();
 
         public User() { }
     }

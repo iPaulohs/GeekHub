@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GeekHub.Migrations
 {
     [DbContext(typeof(GeekHubDBContext))]
-    [Migration("20231028210101_V1")]
+    [Migration("20231029235533_V1")]
     partial class V1
     {
         /// <inheritdoc />
@@ -25,72 +25,61 @@ namespace GeekHub.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GeekHub.Domains.FavoritesListAssociation", b =>
+            modelBuilder.Entity("FavoritesListMoviesMovie", b =>
                 {
-                    b.Property<string>("AssociationId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("FavoritesListAssociationsListId")
+                        .HasColumnType("nvarchar(120)");
 
-                    b.Property<string>("FavoritesListListId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("MovieId")
+                    b.Property<int>("MoviesMovieId")
                         .HasColumnType("int");
 
-                    b.HasKey("AssociationId");
+                    b.HasKey("FavoritesListAssociationsListId", "MoviesMovieId");
 
-                    b.HasIndex("FavoritesListListId");
+                    b.HasIndex("MoviesMovieId");
 
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("FavoritesListAssociations");
+                    b.ToTable("FavoritesListMoviesMovie");
                 });
 
             modelBuilder.Entity("GeekHub.Domains.FavoritesListMovies", b =>
                 {
                     b.Property<string>("ListId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
 
                     b.Property<string>("ListName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ListId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("FavoritesLists");
-                });
-
-            modelBuilder.Entity("GeekHub.Domains.GeneralListAssociation", b =>
-                {
-                    b.Property<string>("AssociationId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("GeneralListListId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AssociationId");
-
-                    b.HasIndex("GeneralListListId");
-
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("GeneralListsAssociations");
                 });
 
             modelBuilder.Entity("GeekHub.Domains.GeneralListMovies", b =>
                 {
                     b.Property<string>("ListId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
 
                     b.Property<string>("ListName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("ListId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("GeneralLists");
                 });
@@ -103,21 +92,17 @@ namespace GeekHub.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MovieId"));
 
-                    b.Property<string>("FavoritesListMoviesListId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("GeneralListMoviesListId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("MovieId");
 
-                    b.HasIndex("FavoritesListMoviesListId");
-
-                    b.HasIndex("GeneralListMoviesListId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Movies");
                 });
@@ -135,8 +120,8 @@ namespace GeekHub.Migrations
 
                     b.Property<string>("CPF")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasMaxLength(14)
+                        .HasColumnType("nvarchar(14)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -171,8 +156,8 @@ namespace GeekHub.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
+                        .HasMaxLength(45)
+                        .HasColumnType("nvarchar(45)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -205,6 +190,21 @@ namespace GeekHub.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("GeneralListMoviesMovie", b =>
+                {
+                    b.Property<string>("GeneralListAssociationsListId")
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<int>("MoviesMovieId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GeneralListAssociationsListId", "MoviesMovieId");
+
+                    b.HasIndex("MoviesMovieId");
+
+                    b.ToTable("GeneralListMoviesMovie");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -340,69 +340,63 @@ namespace GeekHub.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("GeekHub.Domains.FavoritesListAssociation", b =>
+            modelBuilder.Entity("FavoritesListMoviesMovie", b =>
                 {
-                    b.HasOne("GeekHub.Domains.FavoritesListMovies", "FavoritesList")
+                    b.HasOne("GeekHub.Domains.FavoritesListMovies", null)
                         .WithMany()
-                        .HasForeignKey("FavoritesListListId")
+                        .HasForeignKey("FavoritesListAssociationsListId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GeekHub.Domains.Movie", "Movie")
+                    b.HasOne("GeekHub.Domains.Movie", null)
                         .WithMany()
-                        .HasForeignKey("MovieId")
+                        .HasForeignKey("MoviesMovieId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("FavoritesList");
-
-                    b.Navigation("Movie");
                 });
 
             modelBuilder.Entity("GeekHub.Domains.FavoritesListMovies", b =>
                 {
                     b.HasOne("GeekHub.Domains.User", "User")
-                        .WithOne("FavoriteMovies")
-                        .HasForeignKey("GeekHub.Domains.FavoritesListMovies", "ListId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("GeekHub.Domains.GeneralListAssociation", b =>
-                {
-                    b.HasOne("GeekHub.Domains.GeneralListMovies", "GeneralList")
                         .WithMany()
-                        .HasForeignKey("GeneralListListId");
-
-                    b.HasOne("GeekHub.Domains.Movie", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("GeneralList");
-
-                    b.Navigation("Movie");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GeekHub.Domains.GeneralListMovies", b =>
                 {
                     b.HasOne("GeekHub.Domains.User", "User")
-                        .WithMany("GeneralListMovies")
-                        .HasForeignKey("ListId");
+                        .WithMany("GeneralLists")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("GeekHub.Domains.Movie", b =>
                 {
-                    b.HasOne("GeekHub.Domains.FavoritesListMovies", null)
-                        .WithMany("Movies")
-                        .HasForeignKey("FavoritesListMoviesListId");
+                    b.HasOne("GeekHub.Domains.User", null)
+                        .WithMany("Favorites")
+                        .HasForeignKey("UserId");
+                });
 
+            modelBuilder.Entity("GeneralListMoviesMovie", b =>
+                {
                     b.HasOne("GeekHub.Domains.GeneralListMovies", null)
-                        .WithMany("Movies")
-                        .HasForeignKey("GeneralListMoviesListId");
+                        .WithMany()
+                        .HasForeignKey("GeneralListAssociationsListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GeekHub.Domains.Movie", null)
+                        .WithMany()
+                        .HasForeignKey("MoviesMovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -456,21 +450,11 @@ namespace GeekHub.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GeekHub.Domains.FavoritesListMovies", b =>
-                {
-                    b.Navigation("Movies");
-                });
-
-            modelBuilder.Entity("GeekHub.Domains.GeneralListMovies", b =>
-                {
-                    b.Navigation("Movies");
-                });
-
             modelBuilder.Entity("GeekHub.Domains.User", b =>
                 {
-                    b.Navigation("FavoriteMovies");
+                    b.Navigation("Favorites");
 
-                    b.Navigation("GeneralListMovies");
+                    b.Navigation("GeneralLists");
                 });
 #pragma warning restore 612, 618
         }

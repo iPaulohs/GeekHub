@@ -6,7 +6,8 @@ namespace GeekHub.Domains
     {
 
         [Required]
-        public override string ListName { get; set; } = "Favorites";
+        [StringLength(120)]
+        public override string ListName { get; set; }
 
         public FavoritesListMovies() { }
     }
