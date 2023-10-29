@@ -5,16 +5,15 @@ namespace GeekHub.Services
     public class HomeServices
     {
         private readonly HttpClient _httpClient;
-        public HomeServices(HttpClient httpClient) => _httpClient = httpClient; 
-
-        private readonly string Apikey = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0MTRmZTUzNjg2MzE1NzViZDc4NTZjMzU2YTcxZDI2NSIsInN1YiI6IjYzZWVhZTBjN2NmZmRhMDA4ZWMxNTYyOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.zp6musWyqQg0bV_1Od0gYxOnwpayjq3iaEbi2c-cgdU";
+        public HomeServices(HttpClient httpClient) => _httpClient = httpClient;
 
         public async Task<ActionResult<string>> HomeGet(string url)
         {
             try
             {
-                _httpClient.DefaultRequestHeaders.Add("Authorization", Apikey);
+                _httpClient.DefaultRequestHeaders.Add("Authorization", "Apikey");
                 _httpClient.DefaultRequestHeaders.Add("accept", "application/json");
+                Console.WriteLine("Api: ApiKey");
 
                 HttpResponseMessage response = await _httpClient.GetAsync(url);
 

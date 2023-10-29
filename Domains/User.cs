@@ -25,6 +25,7 @@ namespace GeekHub.Domains
         public string? Password { get; set; }
 
         [MaxLength(25)]
+        [RegularExpression(@"^\d{3}\.\d{3}\.\d{3}-\d{2}$")]
         public string CPF {  get; set; }
 
         [Required]

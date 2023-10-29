@@ -10,12 +10,14 @@ using GeekHub.Repository.User;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
+
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<GeekHubDBContext>(options => options.UseSqlServer(configuration.GetConnectionString("GeekHubConnectionString")));
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<GeekHubDBContext>().AddDefaultTokenProviders();
+
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICommomList, FavoritesListRepository>();

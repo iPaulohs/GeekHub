@@ -2,6 +2,7 @@
 using GeekHub.DTO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace GeekHub.Controllers
 {
@@ -9,10 +10,10 @@ namespace GeekHub.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
            _signInManager = signInManager;
             _userManager = userManager;
@@ -21,51 +22,58 @@ namespace GeekHub.Controllers
         [HttpGet]
         public ActionResult<string> Get() => Ok($"API Response: Operating. \nDate: {DateTime.Now.ToShortDateString()}\nHour: {DateTime.Now.ToShortTimeString()}");
 
-        [HttpPost]
-        public async Task<ActionResult> RegisterUser([FromBody] UserDTO model)
+        [HttpPost("register")]
+        public async Task<ActionResult> RegisterUser([FromBody] UserDTORegister model)
         {
-            var userIdDTO = $"<<{model.Username}>>@<<{new Guid(Guid.NewGuid().ToString())}>>";
+            var userIdDTO = $"<<{model.UserName}>>@<<{new Guid(Guid.NewGuid().ToString())}>>";
 
             User user = new()
             {
                 Id = userIdDTO,
-                UserName = model.Username,
+                Name = model.Name,
+                UserName = model.UserName,
                 Email = model.Email,
                 EmailConfirmed = true,
-                FavoriteMovies = new FavoritesListMovies()
-                {
-                    ListId = $"<<FAVORITES_LIST_ID>>@[{new Guid(Guid.NewGuid().ToString())}]>>",
-                    Movies = new List<Movie>(),
-                    ListName = $"FAVORITES_LIST_NAME::[{userIdDTO}]",
-                },
-                GeneralListMovies = new List<GeneralListMovies>(),
-                BirthDate = model.BirthDate
+                BirthDate = model.BirthDate.Date,
+                CPF = model.CPF,
+                Password = model.Password
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);
             }
 
-            await _signInManager.SignInAsync(user, false);
-            return Ok();
+            await _userManager.SetLockoutEnabledAsync(user, false);
+            return Ok("Registered user!");
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] UserDTO userInfo)
+        public async Task<ActionResult> Login([FromBody] UserDTOLogin userInfo)
         {
-            var result = await _signInManager.PasswordSignInAsync(userInfo.Email, userInfo.Password, isPersistent: false, lockoutOnFailure: false);
+            var user = await _userManager.FindByEmailAsync(userInfo.Email);
+
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+            else
+            {
+                Console.WriteLine("Usuário encontrado.");
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user, userInfo.Password, lockoutOnFailure: false, isPersistent: false);
 
             if (result.Succeeded)
             {
-                Ok();
+                return Ok("Login sucessfull.");
             }
-
-            ModelState.AddModelError(string.Empty, "Invalid Login.");
-            return BadRequest(ModelState);
+            else
+            {
+                return BadRequest("Login failed.");
+            }
         }
-
     }
 }
